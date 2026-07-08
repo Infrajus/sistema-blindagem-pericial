@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel IRP | InfraJus</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@300;400&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
@@ -13,35 +14,47 @@
             --creme: #e0d8c3;
         }
 
-        body { background: var(--bg-dark); color: var(--creme); font-family: 'Inter', sans-serif; padding: 20px; }
+        body { background: var(--bg-dark); color: var(--creme); font-family: 'Inter', sans-serif; padding: 15px; margin: 0; }
 
-        .dashboard { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 350px; gap: 30px; }
+        .dashboard { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            display: grid; 
+            grid-template-columns: 1fr; /* Por padrão, empilha tudo */
+            gap: 20px; 
+        }
 
-        .panel { background: var(--grafite); padding: 30px; border-radius: 10px; border: 1px solid var(--cobre); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* Em telas maiores (computador), coloca lado a lado */
+        @media (min-width: 768px) {
+            .dashboard { grid-template-columns: 1fr 350px; }
+        }
+
+        .panel { background: var(--grafite); padding: 25px; border-radius: 10px; border: 1px solid var(--cobre); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         
+        h1 { text-align: center; font-family: 'Cormorant Garamond'; color: var(--cobre); margin-bottom: 20px; }
         h2 { font-family: 'Cormorant Garamond'; color: var(--ouro); border-bottom: 1px solid var(--cobre); padding-bottom: 10px; }
 
-        .indicador { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 300; }
+        .indicador { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 400; font-size: 0.95rem; }
         
         select { 
             width: 100%; padding: 12px; background: #222; border: 1px solid var(--cobre); 
-            color: var(--creme); border-radius: 5px; cursor: pointer; 
+            color: var(--creme); border-radius: 5px; cursor: pointer; font-size: 1rem;
         }
 
         .selo-central {
-            text-align: center; border: 2px solid var(--cobre); padding: 40px;
-            border-radius: 50%; width: 200px; height: 200px; margin: 0 auto 30px;
+            text-align: center; border: 2px solid var(--cobre); padding: 20px;
+            border-radius: 50%; width: 160px; height: 160px; margin: 20px auto;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         
-        .score { font-size: 3rem; font-family: 'IBM Plex Mono'; color: var(--ouro); }
-        .status { font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        .score { font-size: 2.5rem; font-family: 'IBM Plex Mono'; color: var(--ouro); }
+        .status { font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align: center; font-family: 'Cormorant Garamond'; color: var(--cobre);">Índice de Robustez Pericial (IRP)</h1>
+    <h1>Índice de Robustez Pericial (IRP)</h1>
 
     <div class="dashboard">
         <div class="panel">
@@ -55,7 +68,7 @@
                 <div class="score" id="irp-score">0</div>
                 <div>IRP</div>
             </div>
-            <div id="resultado-texto" style="text-align: center;">Preencha os critérios.</div>
+            <div id="resultado-texto" style="text-align: center;">Selecione os parâmetros para análise.</div>
         </div>
     </div>
 
@@ -74,9 +87,9 @@
                 <div class="indicador">
                     <label>${p.label}</label>
                     <select id="${p.id}" onchange="calcularIRP()">
-                        <option value="0">Frágil</option>
-                        <option value="10">Em atenção</option>
-                        <option value="20">Robusto</option>
+                        <option value="0">Frágil (0)</option>
+                        <option value="10">Em atenção (10)</option>
+                        <option value="20">Robusto (20)</option>
                     </select>
                 </div>
             `;
@@ -88,11 +101,10 @@
             document.getElementById('irp-score').innerText = total;
             
             const txt = document.getElementById('resultado-texto');
-            if(total >= 80) txt.innerHTML = "<span style='color:green' class='status'>🟢 ALTA BLINDAGEM</span><br>Laudo pronto para protocolo.";
-            else if(total >= 50) txt.innerHTML = "<span style='color:gold' class='status'>🟡 PONTOS DE ATENÇÃO</span><br>Revise a cadeia lógica e as limitações.";
-            else txt.innerHTML = "<span style='color:red' class='status'>🔴 VULNERÁVEL</span><br>Alto risco de impugnação.";
+            if(total >= 80) txt.innerHTML = "<span style='color:#4CAF50' class='status'>🟢 ALTA BLINDAGEM</span><br>Laudo pronto para protocolo.";
+            else if(total >= 50) txt.innerHTML = "<span style='color:#FFC107' class='status'>🟡 PONTOS DE ATENÇÃO</span><br>Revise a cadeia lógica e limitações.";
+            else txt.innerHTML = "<span style='color:#B71C1C' class='status'>🔴 VULNERÁVEL</span><br>Alto risco de impugnação.";
         }
     </script>
 </body>
 </html>
-
