@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel IRP | InfraJus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@300;400&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --grafite: #2d2d2d;
+            --cobre: #b87333;
+            --ouro: #d4af37;
+            --creme: #e0d8c3;
+        }
+
+        body { background: var(--bg-dark); color: var(--creme); font-family: 'Inter', sans-serif; padding: 20px; }
+
+        .dashboard { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 350px; gap: 30px; }
+
+        .panel { background: var(--grafite); padding: 30px; border-radius: 10px; border: 1px solid var(--cobre); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        h2 { font-family: 'Cormorant Garamond'; color: var(--ouro); border-bottom: 1px solid var(--cobre); padding-bottom: 10px; }
+
+        .indicador { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 300; }
+        
+        select { 
+            width: 100%; padding: 12px; background: #222; border: 1px solid var(--cobre); 
+            color: var(--creme); border-radius: 5px; cursor: pointer; 
+        }
+
+        .selo-central {
+            text-align: center; border: 2px solid var(--cobre); padding: 40px;
+            border-radius: 50%; width: 200px; height: 200px; margin: 0 auto 30px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        
+        .score { font-size: 3rem; font-family: 'IBM Plex Mono'; color: var(--ouro); }
+        .status { font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center; font-family: 'Cormorant Garamond'; color: var(--cobre);">Índice de Robustez Pericial (IRP)</h1>
+
+    <div class="dashboard">
+        <div class="panel">
+            <h2>Camadas de Proteção</h2>
+            <div id="questoes"></div>
+        </div>
+
+        <div class="panel">
+            <h2>Blindagem do Laudo</h2>
+            <div class="selo-central">
+                <div class="score" id="irp-score">0</div>
+                <div>IRP</div>
+            </div>
+            <div id="resultado-texto" style="text-align: center;">Preencha os critérios.</div>
+        </div>
+    </div>
+
+    <script>
+        const pilares = [
+            {id: 'p1', label: '1. Fundamentação (Método/Refs)', peso: 20},
+            {id: 'p2', label: '2. Cadeia Lógica (Achados → Conclusão)', peso: 20},
+            {id: 'p3', label: '3. Resposta aos Quesitos', peso: 20},
+            {id: 'p4', label: '4. Declaração de Limitações', peso: 20},
+            {id: 'p5', label: '5. Objetividade e Competência', peso: 20}
+        ];
+
+        const container = document.getElementById('questoes');
+        pilares.forEach(p => {
+            container.innerHTML += `
+                <div class="indicador">
+                    <label>${p.label}</label>
+                    <select id="${p.id}" onchange="calcularIRP()">
+                        <option value="0">Frágil</option>
+                        <option value="10">Em atenção</option>
+                        <option value="20">Robusto</option>
+                    </select>
+                </div>
+            `;
+        });
+
+        function calcularIRP() {
+            let total = 0;
+            pilares.forEach(p => total += parseInt(document.getElementById(p.id).value));
+            document.getElementById('irp-score').innerText = total;
+            
+            const txt = document.getElementById('resultado-texto');
+            if(total >= 80) txt.innerHTML = "<span style='color:green' class='status'>🟢 ALTA BLINDAGEM</span><br>Laudo pronto para protocolo.";
+            else if(total >= 50) txt.innerHTML = "<span style='color:gold' class='status'>🟡 PONTOS DE ATENÇÃO</span><br>Revise a cadeia lógica e as limitações.";
+            else txt.innerHTML = "<span style='color:red' class='status'>🔴 VULNERÁVEL</span><br>Alto risco de impugnação.";
+        }
+    </script>
+</body>
+</html>
 
